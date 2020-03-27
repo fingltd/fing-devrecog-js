@@ -1,0 +1,37 @@
+{
+  "name": "fing-devrecog",
+  "version": "0.1.0",
+  "description": "Client for Fing DevRecog API",
+  "main": "index.js",
+  "bin": {
+    "fing-heartbeat": "bin/fing-devrecog-cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fingltd/fing-devrecog-js"
+  },
+  "engines": {
+    "node": ">=6",
+    "npm": ">=3"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "fing",
+    "devrecog",
+    "device",
+    "api",
+    "client",
+    "recognition",
+    "identification"
+  ],
+  "author": "Tommaso Latini <tommaso at fing.com>",
+  "license": "MIT",
+  "dependencies": {
+    "argparse": "~1.0.10"
+  },
+  "devDependencies": {
+    "jest": "^25.2.3"
+  }
+}
