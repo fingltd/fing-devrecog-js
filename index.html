@@ -1,0 +1,152 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Fing DevRecog Api Example</title>
+
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" >
+        <style>
+            html,
+            body {
+                height: 100%;
+            }
+
+            body {
+                display: -ms-flexbox;
+                display: -webkit-box;
+                display: flex;
+                -ms-flex-align: center;
+                -ms-flex-pack: center;
+                -webkit-box-align: center;
+                align-items: center;
+                -webkit-box-pack: center;
+                justify-content: center;
+                padding-top: 40px;
+                padding-bottom: 40px;
+                background-color: #f5f5f5;
+            }
+
+            .form-user-agent {
+                width: 100%;
+                max-width: 330px;
+                padding: 15px;
+                margin: 0 auto;
+            }
+            .form-user-agent .checkbox {
+                font-weight: 400;
+            }
+            .form-user-agent .form-control {
+                position: relative;
+                box-sizing: border-box;
+                height: auto;
+                padding: 10px;
+                font-size: 16px;
+            }
+            .form-user-agent .form-control:focus {
+                z-index: 2;
+            }
+            .form-user-agent input[type="text"] {
+                margin-bottom: -1px;
+                border-bottom-right-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+            .form-user-agent input[type="password"] {
+                margin-bottom: 10px;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+            }
+        </style>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="src/fing-http-client-browser.js"></script>
+        <script src="src/fing-devrecog-api-2.js"></script>
+
+    </head>
+
+    <body class="text-center">
+
+        <div class="form-user-agent">
+            <form id="fing-form">
+                <img class="mb-4" src="https://www.fing.com/img/logo.png" alt="" height="72">
+                <h3 class="h3 mb-3 font-weight-normal">Fing DevRecog API</h3>
+
+                <div>
+                    <label for="user-agent" class="sr-only">
+                        HTTP User Agent
+                    </label>
+                    <input type="text" id="user-agent" class="form-control" placeholder="HTTP User Agent" autofocus>
+                    <label for="license-key" class="sr-only">
+                        License Key
+                    </label>
+                    <input type="password" id="license-key" class="form-control" autocomplete="on" placeholder="License Key" required autofocus>
+                </div>
+
+
+                <input class="mt-5 btn btn-lg btn-primary btn-block" type="submit" />
+
+            </form>
+
+            <table id="fing-result" class="hidden table">
+                <thead>
+                <tr>
+                    <th scope="col">Field</th>
+                    <th scope="col">Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">Type</th>
+                    <td id="type-name"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Group</th>
+                    <td id="type-group"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Brand</th>
+                    <td id="brand"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Model</th>
+                    <td id="model"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Operating System</th>
+                    <td id="os"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p class="mt-5 mb-3 text-muted small">&copy; 2020 Fing Ltd.</p>
+        </div>
+        <script >
+            // console.debug("Initialized client for v" + fingClient.getApiVersion() + " API");
+            $('#fing-result').hide();
+            $('#fing-form').submit(function (event) {
+                event.preventDefault();
+                const licenseKey = $('#fing-form #license-key').val();
+                const hua = $('#fing-form #user-agent').val() || navigator.userAgent;
+                const fingClient = new FingDevRecogApi2(licenseKey);
+                // console.debug("HTTP User Agent: " + hua);
+                fingClient.recognizeUserAgent(hua)
+                        .then(function(device) {
+                            $('#type-name').text(device.getTypeName());
+                            $('#type-group').text(device.getTypeGroup());
+                            $('#brand').text(device.getBrand());
+                            $('#model').text(device.getModel());
+                            $('#os').text(device.getOSName() + " / " + device.getOSVersion());
+                            $('#fing-result').show();
+                        })
+                        .catch(function(error) {
+                            console.debug("Error: ", error);
+                            alert("Error communicating with the API: " + error.message);
+                        });
+                return false;
+            });
+        </script>
+    </body>
+</html>
